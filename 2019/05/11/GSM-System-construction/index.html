@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="OpenBTS,伪基站,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="​       大三下学期的无线通信安全综合实验，其中的第一个是GSM通信系统构建。通过OpenBTS工具我们可以模拟出一个伪基站与手机进行交互，例如发送短信或者进行语音通话。最重要的一点是，根据我国现行法律，对移动通信系统进行干扰或未经授权的监听属违法行为，因此我们必须以安全技术研究为目的，仅针对SDR搭建的GSM系统开展实验，并保证在试验后不将相关技术用于非法目的。">
+<meta name="keywords" content="OpenBTS,伪基站">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GSM通信系统构建">
+<meta property="og:url" content="http://yoursite.com/2019/05/11/GSM-System-construction/index.html">
+<meta property="og:site_name" content="Colin">
+<meta property="og:description" content="​       大三下学期的无线通信安全综合实验，其中的第一个是GSM通信系统构建。通过OpenBTS工具我们可以模拟出一个伪基站与手机进行交互，例如发送短信或者进行语音通话。最重要的一点是，根据我国现行法律，对移动通信系统进行干扰或未经授权的监听属违法行为，因此我们必须以安全技术研究为目的，仅针对SDR搭建的GSM系统开展实验，并保证在试验后不将相关技术用于非法目的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/3.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/4.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/5.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/6.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/7.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/8.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/9.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/10.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/11.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/12.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/13.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/14.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/15.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/16.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/17.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/18.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/19.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/20.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/21.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/22.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/23.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/24.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/25.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/26.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/27.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/28.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/29.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/30.jpg">
+<meta property="og:updated_time" content="2019-06-29T09:27:19.123Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GSM通信系统构建">
+<meta name="twitter:description" content="​       大三下学期的无线通信安全综合实验，其中的第一个是GSM通信系统构建。通过OpenBTS工具我们可以模拟出一个伪基站与手机进行交互，例如发送短信或者进行语音通话。最重要的一点是，根据我国现行法律，对移动通信系统进行干扰或未经授权的监听属违法行为，因此我们必须以安全技术研究为目的，仅针对SDR搭建的GSM系统开展实验，并保证在试验后不将相关技术用于非法目的。">
+<meta name="twitter:image" content="http://yoursite.com/2019/05/11/GSM-System-construction/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/11/GSM-System-construction/">
+
+
+
+
+
+  <title>GSM通信系统构建 | Colin</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/11/GSM-System-construction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cao KaiLin">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colin">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GSM通信系统构建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-11T15:32:25+08:00">
+                2019-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/无线网络安全实验/" itemprop="url" rel="index">
+                    <span itemprop="name">无线网络安全实验</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>​       大三下学期的无线通信安全综合实验，其中的第一个是GSM通信系统构建。通过OpenBTS工具我们可以模拟出一个伪基站与手机进行交互，例如发送短信或者进行语音通话。最重要的一点是，根据我国现行法律，对移动通信系统进行干扰或未经授权的监听属违法行为，因此我们必须以安全技术研究为目的，仅针对SDR搭建的GSM系统开展实验，并保证在试验后不将相关技术用于非法目的。</p>
+<a id="more"></a>
+
+<center>伪基站搭建与IMSI捕获</center>
+
+<h3 id="一、实验目的"><a href="#一、实验目的" class="headerlink" title="一、实验目的"></a>一、实验目的</h3><p>搭建基于OpenBTS的基站，手机接入该基站，进行短信、语音等测试。</p>
+<h3 id="二、实验仪器"><a href="#二、实验仪器" class="headerlink" title="二、实验仪器"></a>二、实验仪器</h3><p>USRP B210 1台，天线2根，PC机1台，PC机所用系统为Ubuntu 16.04。</p>
+<h3 id="三、实验原理"><a href="#三、实验原理" class="headerlink" title="三、实验原理"></a>三、实验原理</h3><p>OpenBTS使用通用软件无线电硬件（如USRP）作为射频前端，并提供了GSM协议栈的开源实现，通过语音交换软件（如Asterisk），可以接入公共网络。</p>
+<h3 id="四、实验步骤"><a href="#四、实验步骤" class="headerlink" title="四、实验步骤"></a>四、实验步骤</h3><h5 id="0x00：开启服务"><a href="#0x00：开启服务" class="headerlink" title="0x00：开启服务"></a>0x00：开启服务</h5><p>​       我们首先需要开启四个服务：asterisk、sipauthserve、smqueue和openbts，上述的这四个服务，在终端中输入start <strong><em>(</em></strong>为上面的四个服务)即可开启对应的服务。不过在实验中，终端中输入上述的这四条命令后，手机找不到我们搭建的伪基站，怀疑可能是这样的命令没让这四个服务完全开启。后面为了开启这四个服务，我使用了老师所提供的一个脚本文件，通过执行脚本文件来开启这四个服务后，手机可以找到搭建的伪基站并开始更进一步的实践。</p>
+<img src="/2019/05/11/GSM-System-construction/1.jpg">
+
+<p>​       在上面的这些服务中，asterisk是运行在linux上来实现用户电话交换的IP-PBX系统开源软件，支持各种的VOIP协议。asterisk提供了很多以前只有昂贵、专业的PBX系统才支持的功能，如：会议电话、语音信箱、交互式语音应答、自动电话转接；sipauthServe实现用户注册，替换SIP注册和运营商的HLR，smqueue负责短信处理，可实现本地发送短信到某个基站。</p>
+<h5 id="0x01：修改Band和ARFCN"><a href="#0x01：修改Band和ARFCN" class="headerlink" title="0x01：修改Band和ARFCN"></a>0x01：修改Band和ARFCN</h5><p>   Band频段：全世界共有4个GSM频段，分别为850,900,1800,1900；ARFCN 绝对无线频道编号：每个无线频段都有100多种ARFCN可以用，每个ARFCN对应一个频率，选择正确的频段和频率，可以避免干扰。这些配置都在GSM.Radio中，用config命令可以查看：</p>
+<img src="/2019/05/11/GSM-System-construction/2.jpg">
+
+<p> 然后我们再来修改一下基站的MCC和MNC。其中MCC为移动国家码(MCC460为中国的标识，配置此命令后将基站设置为国内)，MNC为移动网络码标识运营商(联通MNC号为01，移动MNC号为00，电信为03)。设置时，我将MNC设置为了10。这一步还是很有必要设置的，如果不进行设置，可能就会造成冲突，我们手机在搜索基站时，显示基站的信息就是以MCC+MNC的组合形式呈现的。</p>
+<img src="/2019/05/11/GSM-System-construction/3.jpg">
+
+<h5 id="0x02：调整信号增益"><a href="#0x02：调整信号增益" class="headerlink" title="0x02：调整信号增益"></a>0x02：调整信号增益</h5><p>   需要修改GSM.Radio.RxGain的参数，如果信号增益太大，会导致设备无法工作，一般设置为最小25。</p>
+<img src="/2019/05/11/GSM-System-construction/4.jpg">
+
+<h5 id="0x03：配置基站开放注册"><a href="#0x03：配置基站开放注册" class="headerlink" title="0x03：配置基站开放注册"></a>0x03：配置基站开放注册</h5><p>​    使用如下的命令即可完成配置：</p>
+<img src="/2019/05/11/GSM-System-construction/5.jpg">
+
+<p>​     现在在用手机搜索下运营商，然后再列表中选择测试网络，过一会儿后会提示注册网络失败。</p>
+<img src="/2019/05/11/GSM-System-construction/6.jpg">
+
+<p>​      实际上，如果注册网络成功，会收到一条提示短信，短信内容包括IMSI还有分配的号码(前提是有添加过号码)。所以只要没收到短信，就知道没有注册进入网络。</p>
+<img src="/2019/05/11/GSM-System-construction/7.jpg">
+
+<h5 id="0x04：寻找IMSI"><a href="#0x04：寻找IMSI" class="headerlink" title="0x04：寻找IMSI"></a>0x04：寻找IMSI</h5><p>​       所要找的最主要的特性参数是IMSI(国际移动用户识别码)，这是存储在SIM卡中的14-15位数字，类似网络中的手机用户名。但手机通常不会泄露自己的SIM卡中的IMSI，有个别特殊手机在设置菜单可以看到，有个别特殊手机要在工程模式才能看到，总之要得到SIM卡的IMSI挺麻烦的。不过我们还有其他方法。OpenBTS需要IMSI和它交互，而且你可以控制网络准入条件，那就可以强制手机进行网络交互的测试，然后在网络上执行LUR更新请求，类似注册。<br>​       OpenBTS会记住这些LUR交互，用来进行IMSI/TMSI(临时识别码)的变换。将IMSI变换为TMSI是为了保护用户的隐私，防止IMSI被窃取。这个变换功能的选项默认是关闭的(需要将Control.LUR.SendTMSIs选项打开)。</p>
+<img src="/2019/05/11/GSM-System-construction/8.jpg">
+
+<p>​       之后可以用tmsis命令查看这些信息。现在可以看到最近一段时间手机进行的LUR交互：</p>
+<img src="/2019/05/11/GSM-System-construction/9.jpg">
+
+<p>​        这些条目按时间排序，越近的交互信息越靠上。所有的交互信息中AUTH都是0，因为手机不是已知用户导致LUR交互失败。如果有手机成功接入到网络，那么对应的LUR交互信息中的AUTH就是1了。</p>
+<h5 id="0x05：添加用户"><a href="#0x05：添加用户" class="headerlink" title="0x05：添加用户"></a>0x05：添加用户</h5><p>​        我们现在已经有了创建一个测试网络的新用户所需的所有必要信息。还需要两个字段，这个可以自由选择：Name和MSISDN(移动台ISDN号码)，Name字段仅仅是这个用户的名称，用来关联手机或者用户的，MSISDN字段的含义和用户的手机号码差不多。因为我们并没有连接到公共电话网络，所以可以设置成任何号码。</p>
+<img src="/2019/05/11/GSM-System-construction/10.jpg">
+
+<p>​        添加用户用的脚本是nmcli.py。这是NodeManager APIs的一个很简单的客户端，可以用它通过JSON格式的命令来更改配置参数、添加用户以及状态监控等等。添加用户用的脚本是nmcli.py。这是NodeManager APIs的一个很简单的客户端，可以用它通过JSON格式的命令来更改配置参数、添加用户以及状态监控等等。<br>​       使用nmcli.py有两种方式可以添加用户：第一种方法使用缓存的认证信息，使用方法如下所示。</p>
+<p>​       ./nmcli.py sipauthserve subscribers create name imsi msisdn<br>​      第二种方法使用完整的认证信息，如下所示。<br>​      ./nmcli.py sipauthserve subscribers create name imsi msisdn ki<br>不过我们没有办法得到ki码，就只能用第一种方法添加用户。</p>
+<img src="/2019/05/11/GSM-System-construction/11.jpg">
+
+<p>​        实验中，我将我和另外一个同学添加进我们搭建的网络中，上面是添加我的用户信息，下面将另外一个同学的信息也添加进来。</p>
+<img src="/2019/05/11/GSM-System-construction/12.jpg">
+
+<p>​       检查下添加的用户：</p>
+<img src="/2019/05/11/GSM-System-construction/13.jpg">
+
+<h5 id="0x06：接入网络"><a href="#0x06：接入网络" class="headerlink" title="0x06：接入网络"></a>0x06：接入网络</h5><p>​        现在就可以将这两台手机加入到测试网络了，在手机中选择运营商再次加入网络，LUR交互应该会成功。这时候通过tmsis命令可以看到AUTH的值为1了。对于IMSI列表如下：</p>
+<img src="/2019/05/11/GSM-System-construction/14.jpg">
+
+<h5 id="0x07-短信测试"><a href="#0x07-短信测试" class="headerlink" title="0x07: 短信测试"></a>0x07: 短信测试</h5><p>​       手机注册进网络以后，就可以进行一些更有意思的测试，首先是网络中的短信的简单测试，负责接收、路由转发和调度的应用服务是smqueue(在刚开始实验时我们就已经打开了此服务)。</p>
+<h6 id="Step-I-短信编写-411"><a href="#Step-I-短信编写-411" class="headerlink" title="Step I 短信编写(411)"></a>Step I 短信编写(411)</h6><p>​        在手机中，写一条短信发给411。这是smqueue中的一个简码处理流程，只管回显，不管其他接收、网络及用户信息等整个流程所用任何信息。发送给411的短信的可以是任意内容，可以是任意的文字或者数字或者字母。这个可以用来帮你确认哪条消息在回应时候出错。<br>​         编写一条发往411短信，点击发送，几秒钟之后，应该会出现应答：</p>
+<img src="/2019/05/11/GSM-System-construction/15.jpg">
+
+<h6 id="Step-II直接发送短信"><a href="#Step-II直接发送短信" class="headerlink" title="Step II直接发送短信"></a>Step II直接发送短信</h6><p>​          在OpenBTS上也可以用sendsms命令直接发送短信进行测试。在OpenBTSCLI中，可以看下这条命令的帮助信息：</p>
+<img src="/2019/05/11/GSM-System-construction/16.jpg">
+
+<p>​          因为在这里基站是可以冒充为任意号码进行发送的，所以我们可以将发件人的电话号码任意的指定，这样就可以比较有意思了。比如可以假装为交通银行的客服号码95559或者是匪警电话110：</p>
+<img src="/2019/05/11/GSM-System-construction/17.jpg">
+
+<img src="/2019/05/11/GSM-System-construction/18.jpg">
+
+<img src="/2019/05/11/GSM-System-construction/19.jpg">
+
+<p>​          从上面的短信中，我们可以发现，字数是有一定限制的，过长部分的内容不会显示，而且不支持中文内容，中文内容会出现如图中下午3:30的第二条短信那样的乱码。</p>
+<h6 id="StepIII双方互发短信"><a href="#StepIII双方互发短信" class="headerlink" title="StepIII双方互发短信"></a>StepIII双方互发短信</h6><p>​         在实验中我们的网络中有两台手机，所以可以给相互发几条短信试试，号码就是之前注册进网络时候设置的号码。如果号码错误，会收到短信提示说无法发送短信到xxx(给101发送8-10位数字，基站就会回复这台手机所注册的手机号)。</p>
+<img src="/2019/05/11/GSM-System-construction/20.jpg">
+
+<h5 id="0x08-语音通话测试"><a href="#0x08-语音通话测试" class="headerlink" title="0x08: 语音通话测试"></a>0x08: 语音通话测试</h5><h6 id="Step-I-呼叫测试-2602"><a href="#Step-I-呼叫测试-2602" class="headerlink" title="Step I 呼叫测试(2602)"></a>Step I 呼叫测试(2602)</h6><p>   用手机拨打2062，听听语音，我们可以感觉到声音音调的改变，这些音调的变化是因为下行语音链路中丢了一些数据。在这里，语音测试的最主要应用是测试下行链路的质量。一个下行链路在生产环境有3%丢包率，那么在正常使用时候会有5%-7%的丢包率。如果能够听得到一段连续声音的话，可以说明三个问题：asterisk服务正常工作、语音呼叫路由正常工作和语音的下行链路正常。</p>
+<h6 id="Step-II回音测试-2600"><a href="#Step-II回音测试-2600" class="headerlink" title="Step II回音测试(2600)"></a>Step II回音测试(2600)</h6><p>   用手机拨打2600，然后对着手机麦克风说话，就可以听到自己说的话。回声测试除了可以用来测试语音通话，还能测试网络中延时情况和上行链路质量。</p>
+<img src="/2019/05/11/GSM-System-construction/21.jpg">
+
+<h6 id="StepIII双方通话"><a href="#StepIII双方通话" class="headerlink" title="StepIII双方通话"></a>StepIII双方通话</h6><img src="/2019/05/11/GSM-System-construction/22.jpg">
+
+<img src="/2019/05/11/GSM-System-construction/23.jpg">
+
+<h5 id="0x09-链路质量控制"><a href="#0x09-链路质量控制" class="headerlink" title="0x09: 链路质量控制"></a>0x09: 链路质量控制</h5><p>在OpenBTS CLI中有一个很方便的命令工具chans，用这个命令可以客观的量化用户所感知到的基础链路质量。比如说，在拨打2602测试语音通话，10秒后执行chans命令，然后将两个手机一个拿远一米一个拿近一米，再执行chans命令，就能很明显的看到区别：</p>
+<img src="/2019/05/11/GSM-System-construction/24.jpg">
+
+<p>在这里我们主要关注SNR(信噪比)、TXPWR(发送功率)、RXLEV_DL(接收灵敏度)。SNR是基站上行链路的信噪比测量值，这个数值越大越好。当手机被拿远后，这个数值反而提高了。原因在于TXPWR的值，这个数值是手机反馈的上行链路功耗，第二次读的时候，第二个手机的这个参数从8变成16，这说明手机在上行链路启用了更大功耗，这就可以解释为何基站SNR更高。<br>另外，RXLEV_DL代表的是手机下行链路信号强度。第二次读的时候，手机挪远以后，这个数值从-80dBm降到-96dBm，因为手机挪远以后距离基站更远，收到的下行链路数据的信号更弱。</p>
+<h5 id="0x10-个性化网络定制"><a href="#0x10-个性化网络定制" class="headerlink" title="0x10: 个性化网络定制"></a>0x10: 个性化网络定制</h5><p>首先我们可以修改短名称，短名称就是手机搜索运营商时候看到的运营商名称，这是我们搜索运营商网络时候第一个注意到的信息，所以需要将OpenBTS的默认名Range改一下：</p>
+<img src="/2019/05/11/GSM-System-construction/25.jpg">
+
+<p>在手机进行注册的时候，当我们注册成功或者失败的时候都会给我们相应的信息，这里反馈的信息也是可以修改的：</p>
+<img src="/2019/05/11/GSM-System-construction/26.jpg">
+
+
+
+
+
+<center>关于本次实验的一些课后思考题</center>
+
+<h5 id="①所搭建的系统如何充当伪基站？"><a href="#①所搭建的系统如何充当伪基站？" class="headerlink" title="①所搭建的系统如何充当伪基站？"></a>①所搭建的系统如何充当伪基站？</h5><p>   通过工程手机获取到附近小区的频点，赋值给伪基站，模拟附近小区频点，通过增大基站功率和优化C2小区优选算法，使手机在扫描搜索周边基站信息时只考虑信号强度，迫使手机优先连接伪基站(GSM单向鉴权)，断开原始正常基站。“伪基站”设备模拟的不仅仅是基站，最主要的是还模拟了部分核心网的功能，包括发送短信的功能(通过Asterisk软件)，通过我们上面的实验可知，伪基站可以模拟出任意号码给受害者手机发送虚假短信，例如攻击者可以在伪基站内伪造出交通银行的号码95559给连接上的受害者手机发送一些诈骗短信等；此外，OpenBTS也可以实现核心网中的语音功能。</p>
+<h5 id="②在确保手机能接入该系统时需要预先对手机做何种操作？"><a href="#②在确保手机能接入该系统时需要预先对手机做何种操作？" class="headerlink" title="②在确保手机能接入该系统时需要预先对手机做何种操作？"></a>②在确保手机能接入该系统时需要预先对手机做何种操作？</h5><p>   我们需要手动将手机从目前接入的移动运营商网络断开，然后搜索可以选择的运营商网络(其中包含了我们的伪造GSM网络)，然后再来选择伪造的网络。这样的原因是，如果手机原先的运行商网络是中国电信的(其2G采用的是CDMA标准)，因此中国电信的网络根本不会跳转到GSM网络下(无论我们把伪基站的信号调得有多大)，所以我们需要手动切换(硬切换)；中国移动和联通的2G采用的标准是GSM的，不过我们目前手机网络肯定是优先使用4G，再到3G，最后才到2G，要使用2G，我们首先需要将手机从4G压制到2G，这种操作我们暂时无法实现，所以一种可行的办法依旧是从现有的移动运行商网络断开，再手动选择我们自己搭建的网路。</p>
+<h5 id="③如何检测伪基站的存在？"><a href="#③如何检测伪基站的存在？" class="headerlink" title="③如何检测伪基站的存在？"></a>③如何检测伪基站的存在？</h5><p>首先我们可以通过一些表面化的异常情况来判断我们有没有被吸入进伪基站的网络中，不能说一定是伪基站所致，但应该引起警觉或者可以做点测试打消怀疑。</p>
+<h6 id="0x00：一些基本判断"><a href="#0x00：一些基本判断" class="headerlink" title="0x00：一些基本判断"></a>0x00：一些基本判断</h6><p>1）通话中信号突然中断。<br>在排除周边信号不好或者存在信号死角之外，很可能是被伪基站强制“吸”走，于是信号<br>被“切断”。典型现象就是手机信号从满格跌落到无信号，然后又快速回升。<br>2）通信网络模式改变。<br>现在大家用的都是4G或者3G网络，正常情况下载手机屏幕顶上右侧会出现一个阶梯状信号格数提示，一般会显示“4G”或“3G”，当突然改变为“GSM”、“G”或者不再显示具体网络类型时，就意味着遭遇到强制“降频”，即从4G被拉到了GSM。<br>3）无法接收短信接打电话。<br>肯定的，一旦被伪基站“劫持”，手机的所有通信就只能与伪基站交互，由于伪基站无法与合法基站进行鉴权等交互，所以就相当于处于“孤岛”模式，自然所有对外联系都被中断。这就解释了有时候信号格数还行，但却打不出去电话接收不到短信的原因，特别是对于一些就处于3G/4G信号薄弱的区域。<br>4）运营商信息。<br>在Android下，可以通过查看手机电话卡（就是SIM卡）状态信来查询当前网络的运营商相关信息，在疑似被伪基站劫持时，打开查看便知。一般伪基站在此处的信息非常稀少，比如网络名称标识下“中国移动”就会显示为“应急通信”。 </p>
+<img src="/2019/05/11/GSM-System-construction/27.jpg">
+
+<p>5）异常LAC和CID值。<br>这算是以前对早期伪基站的一个判定方法，一个区域内出现异常数值的LAC或者CID值。原理是伪基站一般为了减少运营商注意，会刻意先探查周边的基站LAC和CID参数后，然后给伪基站设置一个绝对不会出现冲突或干扰的高位数值。同一个运营商下的基站设备肯定也要考虑这个，但正常是不会设置差距较大的数值，所以在移动探查中，一旦出现一个比周边LAC、CID值差距很大的基站，除了真正的应急通信基地车，很可能就是伪基站。</p>
+<h6 id="0x01：基站定位辅助判断"><a href="#0x01：基站定位辅助判断" class="headerlink" title="0x01：基站定位辅助判断"></a>0x01：基站定位辅助判断</h6><p>在上面的实验二过程中，我们是可以利基站的MNC、LAC和CID这三个参数来去数据库中定位到这个基站的位置的。那么，这种方法也可以被我们利用来进行检测我们链接上的基站是否是一个伪基站。方法也很简单，获取下当前疑似伪基站的LAC和CID，直接到<br>基站数据网站查询该基站是否真实存在，没有入库的即为伪基站。</p>
+<h6 id="0x02：频点列表"><a href="#0x02：频点列表" class="headerlink" title="0x02：频点列表"></a>0x02：频点列表</h6><p>在对基站扫频时，正常情况下，从实用性上考虑，一个基站至少提供3个以上的频点支持，繁华地段的基站甚至会开放7、8个以上的频点，同时部署密度会增大，而每个频点上的8个时隙（slot）也会全部开放接入。我们可以从数据包上看到实际的频点列表是封装在GSMTAP协议中：</p>
+<img src="/2019/05/11/GSM-System-construction/28.jpg">
+
+<p>既然一个正规的基站应该是提供了不少于3个频点的接入，且每个频点上支持8个slot（虽然不一定每个有用）。所以这又给我们检测伪基站提供了一种检测方法，只需要用工程手机或者扫频软件查验下当前基站的可用频点数量，并切换下不同的频点，便知基站是真是假。</p>
+<img src="/2019/05/11/GSM-System-construction/29.jpg">
+
+<h6 id="0x03：基于IP判断"><a href="#0x03：基于IP判断" class="headerlink" title="0x03：基于IP判断"></a>0x03：基于IP判断</h6><p>在手机正常收到彩信，我们点击读取彩信内容时，实质上是访问到彩信中包含的一个IP地址。下图是标准的基于MMSE架构的彩信，可以看到彩信中包含的实际地址。</p>
+<img src="/2019/05/11/GSM-System-construction/30.jpg">
+
+<p>而能查看彩信内容(也就是访问该IP地址)的前提是：手机本身也持有一个已注册的合法IP地址，这个地址可以通过读取手机状态信息获得。需要说明的是，这个IP并不是固定的，将随着手机的重启会更新。所以只需要从IP上开展下判断就可以直接识别出伪基站，比如说192开头的肯定有问题了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢鼓励！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/home/caocolin/Brog/LineBrown.github.io/themes/next/source/images/alipay.jpg" alt="Cao KaiLin 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenBTS/" rel="tag"># OpenBTS</a>
+          
+            <a href="/tags/伪基站/" rel="tag"># 伪基站</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Cao KaiLin</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、实验目的"><span class="nav-number">1.</span> <span class="nav-text">一、实验目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、实验仪器"><span class="nav-number">2.</span> <span class="nav-text">二、实验仪器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、实验原理"><span class="nav-number">3.</span> <span class="nav-text">三、实验原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、实验步骤"><span class="nav-number">4.</span> <span class="nav-text">四、实验步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#0x00：开启服务"><span class="nav-number">4.0.1.</span> <span class="nav-text">0x00：开启服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x01：修改Band和ARFCN"><span class="nav-number">4.0.2.</span> <span class="nav-text">0x01：修改Band和ARFCN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x02：调整信号增益"><span class="nav-number">4.0.3.</span> <span class="nav-text">0x02：调整信号增益</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x03：配置基站开放注册"><span class="nav-number">4.0.4.</span> <span class="nav-text">0x03：配置基站开放注册</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x04：寻找IMSI"><span class="nav-number">4.0.5.</span> <span class="nav-text">0x04：寻找IMSI</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x05：添加用户"><span class="nav-number">4.0.6.</span> <span class="nav-text">0x05：添加用户</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x06：接入网络"><span class="nav-number">4.0.7.</span> <span class="nav-text">0x06：接入网络</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x07-短信测试"><span class="nav-number">4.0.8.</span> <span class="nav-text">0x07: 短信测试</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Step-I-短信编写-411"><span class="nav-number">4.0.8.1.</span> <span class="nav-text">Step I 短信编写(411)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Step-II直接发送短信"><span class="nav-number">4.0.8.2.</span> <span class="nav-text">Step II直接发送短信</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#StepIII双方互发短信"><span class="nav-number">4.0.8.3.</span> <span class="nav-text">StepIII双方互发短信</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x08-语音通话测试"><span class="nav-number">4.0.9.</span> <span class="nav-text">0x08: 语音通话测试</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Step-I-呼叫测试-2602"><span class="nav-number">4.0.9.1.</span> <span class="nav-text">Step I 呼叫测试(2602)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Step-II回音测试-2600"><span class="nav-number">4.0.9.2.</span> <span class="nav-text">Step II回音测试(2600)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#StepIII双方通话"><span class="nav-number">4.0.9.3.</span> <span class="nav-text">StepIII双方通话</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x09-链路质量控制"><span class="nav-number">4.0.10.</span> <span class="nav-text">0x09: 链路质量控制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#0x10-个性化网络定制"><span class="nav-number">4.0.11.</span> <span class="nav-text">0x10: 个性化网络定制</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#①所搭建的系统如何充当伪基站？"><span class="nav-number">4.0.12.</span> <span class="nav-text">①所搭建的系统如何充当伪基站？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#②在确保手机能接入该系统时需要预先对手机做何种操作？"><span class="nav-number">4.0.13.</span> <span class="nav-text">②在确保手机能接入该系统时需要预先对手机做何种操作？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#③如何检测伪基站的存在？"><span class="nav-number">4.0.14.</span> <span class="nav-text">③如何检测伪基站的存在？</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#0x00：一些基本判断"><span class="nav-number">4.0.14.1.</span> <span class="nav-text">0x00：一些基本判断</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#0x01：基站定位辅助判断"><span class="nav-number">4.0.14.2.</span> <span class="nav-text">0x01：基站定位辅助判断</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#0x02：频点列表"><span class="nav-number">4.0.14.3.</span> <span class="nav-text">0x02：频点列表</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#0x03：基于IP判断"><span class="nav-number">4.0.14.4.</span> <span class="nav-text">0x03：基于IP判断</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cao KaiLin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
