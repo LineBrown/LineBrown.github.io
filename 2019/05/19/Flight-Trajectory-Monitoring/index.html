@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="OpenBTS,ADS_B信号,在谷歌地图上绘制航班轨迹,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在民用航空领域，飞行器与飞行器间需要发送广播消息以告知其他飞行器自己的位置、速度等信息，以避免飞行器相撞，实行这种机制的信号就为ADS-B信号。因为各家航空公司标准的不一样，要实现统一的标准并加密ADS-B信号显然是不现实的，所以ADS-B信号在传输过程中无加密的进行传输。因此，这也为我们通过USRP-B210设备捕获ADS-B信号提供了条件，我们可以根据这些信号，得知飞行器的位置信息、高度信息、">
+<meta name="keywords" content="OpenBTS,ADS_B信号,在谷歌地图上绘制航班轨迹">
+<meta property="og:type" content="article">
+<meta property="og:title" content="航班轨迹监测">
+<meta property="og:url" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/index.html">
+<meta property="og:site_name" content="Colin">
+<meta property="og:description" content="在民用航空领域，飞行器与飞行器间需要发送广播消息以告知其他飞行器自己的位置、速度等信息，以避免飞行器相撞，实行这种机制的信号就为ADS-B信号。因为各家航空公司标准的不一样，要实现统一的标准并加密ADS-B信号显然是不现实的，所以ADS-B信号在传输过程中无加密的进行传输。因此，这也为我们通过USRP-B210设备捕获ADS-B信号提供了条件，我们可以根据这些信号，得知飞行器的位置信息、高度信息、">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/3.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/4.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/5.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/6.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/7.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/8.jpg">
+<meta property="og:updated_time" content="2019-07-02T03:55:43.796Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="航班轨迹监测">
+<meta name="twitter:description" content="在民用航空领域，飞行器与飞行器间需要发送广播消息以告知其他飞行器自己的位置、速度等信息，以避免飞行器相撞，实行这种机制的信号就为ADS-B信号。因为各家航空公司标准的不一样，要实现统一的标准并加密ADS-B信号显然是不现实的，所以ADS-B信号在传输过程中无加密的进行传输。因此，这也为我们通过USRP-B210设备捕获ADS-B信号提供了条件，我们可以根据这些信号，得知飞行器的位置信息、高度信息、">
+<meta name="twitter:image" content="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/1.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/">
+
+
+
+
+
+  <title>航班轨迹监测 | Colin</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Colin</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/19/Flight-Trajectory-Monitoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Cao KaiLin">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Colin">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">航班轨迹监测</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-19T16:25:49+08:00">
+                2019-05-19
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-02T11:55:43+08:00">
+                2019-07-02
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/无线网络安全实验/" itemprop="url" rel="index">
+                    <span itemprop="name">无线网络安全实验</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在民用航空领域，飞行器与飞行器间需要发送广播消息以告知其他飞行器自己的位置、速度等信息，以避免飞行器相撞，实行这种机制的信号就为ADS-B信号。因为各家航空公司标准的不一样，要实现统一的标准并加密ADS-B信号显然是不现实的，所以ADS-B信号在传输过程中无加密的进行传输。因此，这也为我们通过USRP-B210设备捕获ADS-B信号提供了条件，我们可以根据这些信号，得知飞行器的位置信息、高度信息、速度信息等。更进一步地，如果我们能够篡改这些信号，并且重放出去，会产生什么后果…….</p>
+<a id="more"></a>
+
+<center>航班轨迹监测</center>
+
+<h5 id="一、实验目的"><a href="#一、实验目的" class="headerlink" title="一、实验目的"></a>一、实验目的</h5><p>​        ADS-B信号,在谷歌地图上绘制航班轨迹。</p>
+<h5 id="二、实验器材"><a href="#二、实验器材" class="headerlink" title="二、实验器材"></a>二、实验器材</h5><p>​       系统为Ubuntu 16.04，设备为USRP-B210，如下图中白色的器材，另外需要装有软件Google Earth。</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/1.jpg">
+
+<h5 id="三、实验原理"><a href="#三、实验原理" class="headerlink" title="三、实验原理"></a>三、实验原理</h5><p>​        ADS-B全称是 Automatic Dependent Surveillance - Broadcast,广播式自动相关监视,顾名思义,即无需人工操作或者询问,可以自动地从相关机载设备获取参数向其他飞机或地面站广播飞机的位置、高度、速度、航向、识别号等信息,以供管制员对飞机状态进行监控。ADS-B技术能够实现飞行器之间和飞行器与地面之间的信息共享,接收空域中所有的航路信息。<br>​       ADS-B信息是在1090 MHz 扩展的脉冲信号格式。扩展的脉冲信号是112位长,包含56位的ADS-B信息。前导码包含用于同步的特殊的比特位。下行链路格式字段为5位,表示消息的类型对于扩展的脉冲信号,该字段设置为17。3位功能字段表示模式S转发器的通信能力。飞机地址是一个独特的 24 位标识符,用于转发器的使用寿命；没有两架飞机可以有相同的标识符。ADS-B数据为56位长,包含相应的监视数据(例如识别,位置,速度,紧急码和质量等级)。奇偶校验是接收机用于检测接收到的消息中的传输错误的24位字段。脉冲位置调制方式用于消息编码和传输。<br>​       ADS-B 使用广播通信范例。飞机传送信息,不知道可能收到信息的实体；范围内的任何实体都可以接收和解码传输。此外,传输协议不需要对消息接收的确认,也不需要实现任何保持活动的功能(即如果飞机在指定的时间段内没有广播信息数据,系统将不会查询飞机来确定其状态)。</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/2.jpg">
+
+<p>​       航空CNS(通信导航监视)系统里大量采用非常古老的无线标准.因为航空业巨头们建立了一整套适航规定,飞机上任何一点小小的改动若想获得广泛的应用是非常麻烦的,更不要说对CNS系统的升级换代。</p>
+<h5 id="四、实验步骤"><a href="#四、实验步骤" class="headerlink" title="四、实验步骤"></a>四、实验步骤</h5><h6 id="Step-1：解调数据-飞机轨迹的可视化"><a href="#Step-1：解调数据-飞机轨迹的可视化" class="headerlink" title="Step 1：解调数据/飞机轨迹的可视化"></a>Step 1：解调数据/飞机轨迹的可视化</h6><p>   执行modex_rx命令，开始接收并解码来自飞机的1090MHz无线信号，-K参数即把解码到的航班号、经纬度、飞行速度等等保存为.kml文件；-A参数选择使用哪一根天线进行接收，在实验中我们选择RX2天线接收。接受过程如下图所示：</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/3.jpg">
+
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/4.jpg">
+
+<p>​       在使用天线接收时，推荐把设备放到窗外去接收信号，我当时将USRP -B210放到窗户外面接受了900s的时间，捕获的飞机数量大大增加(和一开始在室内进行捕获时，同样的时间没有收到任何一架飞机的信号，兴冲冲地拿着生成的kml文件去Google Earth里面找飞机一架没有找到，再去打开kml文件发现里面什么都没有)</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/5.jpg">
+
+<p>​         打开kml文件，里面可以看到航班的很多信息，比如说在coordinates标签中记录的应该是飞机坐标的三元组(实际空间中的经度、纬度和高度)，在最下面中我们可以看到这架飞机的很多位置信息三元组，可以观察到这些坐标都是在不断变化的，所以可以判定这是该架飞机的一段飞机轨迹我们就可以掌握了。下面我们再去Google Earth中将此kml文件打开。<br>​          在Google Earth中打开后，可以很直观的将这些飞机显示在地图上，可以看到抓取到的这些信号分布的范围还是挺广的(当时还有一个插曲，在地图上误把山西省的shanxi当成了shaanxi，然后就很好奇为什么抓取的飞机都到了陕西省外面去了，好在自己很快就意识到了这个失误)。打开地图后，每一架飞机的航班号都被标记在了地图上，选取航班号为CBG8812的飞机去Google上搜索一下：</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/6.jpg">
+
+<p>​         查看该航班的详细信息后，我们可以看到该航班的ICAO号、速度、朝向等信息。</p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/7.jpg">
+
+<p>​        经查询，这是一架从西安飞往南宁的飞机(下面的这张图片在<a href="http://www.flightradar24.com网站上获得)。" target="_blank" rel="noopener">www.flightradar24.com网站上获得)。</a></p>
+<img src="/2019/05/19/Flight-Trajectory-Monitoring/8.jpg">
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>感谢鼓励！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="Cao KaiLin 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenBTS/" rel="tag"># OpenBTS</a>
+          
+            <a href="/tags/ADS-B信号/" rel="tag"># ADS_B信号</a>
+          
+            <a href="/tags/在谷歌地图上绘制航班轨迹/" rel="tag"># 在谷歌地图上绘制航班轨迹</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/11/GSM-System-construction/" rel="next" title="GSM通信系统构建">
+                <i class="fa fa-chevron-left"></i> GSM通信系统构建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Cao KaiLin</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#一、实验目的"><span class="nav-number">1.</span> <span class="nav-text">一、实验目的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#二、实验器材"><span class="nav-number">2.</span> <span class="nav-text">二、实验器材</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#三、实验原理"><span class="nav-number">3.</span> <span class="nav-text">三、实验原理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#四、实验步骤"><span class="nav-number">4.</span> <span class="nav-text">四、实验步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Step-1：解调数据-飞机轨迹的可视化"><span class="nav-number">4.1.</span> <span class="nav-text">Step 1：解调数据/飞机轨迹的可视化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Cao KaiLin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+<script type="text/javascript" src="/js/src/value.js"></script>
+</html>
+
+
